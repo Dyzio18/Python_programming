@@ -16,12 +16,15 @@ class Calculator:
         print(self.expression)
         try:
             self.value = eval(self.expression)  # Equal statement
-        except SyntaxError or NameErrror:
-            self.e.delete(0, END)
-            self.e.insert(0, 'Invalid Input!')
         except ZeroDivisionError:
             self.e.delete(0, END)
             self.e.insert(0, 'Can\'t division by ZERO!')
+        except (SyntaxError, NameError):
+            self.e.delete(0, END)
+            self.e.insert(0, 'Invalid Input!')
+        except ValueError:
+            self.e.delete(0, END)
+            self.e.insert(0, 'Invalid Input!!!')
         else:
             self.e.delete(0, END)
             self.e.insert(0, self.value)
@@ -41,11 +44,11 @@ class Calculator:
         self.get_input()
         try:
             complx = complex(self.expression)
-            complex_modul= math.sqrt(pow(complx.imag, 2) + pow(complx.real, 2))
+            complex_modul = math.sqrt(pow(complx.imag, 2) + pow(complx.real, 2))
             polar_coord__sin = (complx.real/complex_modul)
             polar_coord__cos = (complx.imag/complex_modul)
             self.value = str(complex_modul)[:4] + '* (' + str(polar_coord__sin)[:4] + '  + ' + str(polar_coord__cos)[:4] + 'j )'
-        except SyntaxError or NameErrror:
+        except ValueError:
             self.e.delete(0, END)
             self.e.insert(0, 'Invalid Input!')
         else:
@@ -57,7 +60,7 @@ class Calculator:
         try:
             complex_modul = complex(self.expression)
             self.value = math.sqrt(pow(complex_modul.imag, 2) + pow(complex_modul.real, 2))
-        except Exception as inst:
+        except ValueError:
             self.e.delete(0, END)
             self.e.insert(0, 'Invalid Input!')
         else:
@@ -68,7 +71,7 @@ class Calculator:
         self.get_input()
         try:
             self.value = cmath.phase(complex(self.expression))
-        except Exception as inst:
+        except ValueError:
             self.e.delete(0, END)
             self.e.insert(0, 'Invalid Input!')
         else:
@@ -85,10 +88,13 @@ class Calculator:
             elif (complex(self.expression)) == (complex(self.memory)):
                 self.value = str(self.expression) + " is the same as " + str(self.memory)
             else:
-                self.value = "Can\'t compare values"
-        except SyntaxError or NameErrror:
+                raise Exception
+        except SyntaxError or NameErrror or ValueError:
             self.e.delete(0, END)
             self.e.insert(0, 'Invalid Input!')
+        except Exception:
+            self.e.delete(0, END)
+            self.e.insert(0, "Can\'t compare values")
         else:
             self.e.delete(0, END)
             self.e.insert(0, self.value)
@@ -103,7 +109,7 @@ class Calculator:
         try:
             eval(self.expression)   # Check is number and catch exception if doesn't
             self.memory = self.expression
-        except SyntaxError or NameErrror:
+        except SyntaxError or NameErrror or ValueError:
             self.memory = 0
             self.e.delete(0, END)
             self.e.insert(0, 'Can\'t save')
